@@ -50,4 +50,9 @@ data/raw/
 data/interim/
 data/ibtracs.csv
 outputs/logs/*.log
-models/*.onnx
+
+# PyTorch training checkpoints stay local; the cloud build ships the ONNX
+# exports under models/onnx/*.onnx (required at runtime, committed on purpose).
+models/detection/*.pt
+models/intensity/*.pt
+models/ri/*.pt

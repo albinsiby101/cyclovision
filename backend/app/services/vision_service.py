@@ -1,23 +1,26 @@
 """
 CycloVision Hybrid Vision Service
 
-Runs the CNN vision stack (ResNet-18 detection, CNN+ConvLSTM intensity, RI risk,
-Grad-CAM explainability) on uploaded satellite imagery, derives a *tabular storm
-observation* from the imagery (category -> wind/pressure via IMD bands), and pushes
-that observation through the IBTrACS RandomForest forecast chain so the response
-carries both the CNN-derived current state and the RF track/formation/outlook.
+Runs the CNN vision stack (ResNet-18 detection, CNN+ConvLSTM intensity, RI risk)
+on uploaded satellite imagery, derives a *tabular storm observation* from the
+imagery (category -> wind/pressure via IMD bands), and pushes that observation
+through the IBTrACS RandomForest forecast chain so the response carries both the
+CNN-derived current state and the RF track/formation/outlook.
 
-The CNN models are loaded lazily (torch is heavy); callers that never upload an
-image do not pay the import cost.
+The CNNs run through onnxruntime (exported from the PyTorch checkpoints by
+backend/tools/export_onnx.py). PyTorch is NOT a cloud runtime dependency - the
+lightweight build keeps the free-tier memory footprint small. Grad-CAM is a
+PyTorch-only nicety and is intentionally omitted in this build (the response
+flags heatmap_available=False; detection/intensity/RI verdicts are unchanged).
 """
 
 import os
-import base64
 from typing import Dict, Optional
 
 import cv2
 import numpy as np
 
+from ml.preprocessing.preprocessor import SatellitePreprocessor
 from backend.app.schemas.cyclone import ObservationInput
 from backend.app.services import forecast_service
 
@@ -46,60 +49,38 @@ _WIND_RANGES_KMH = ["31-49", "50-61", "62-88", "89-117", "118-166", "167-221", "
 
 class VisionChain:
     def __init__(self):
-        self.device = None
-        self._torch = None
-        self._gradcam_cls = None
         self.preprocessor = None
         self.detector = None
         self.intensity_model = None
         self.ri_model = None
-        self.gradcam = None
         self.models_loaded = False
         self._load()
 
     def _load(self):
         try:
-            import torch
-            from ml.detection.detector import CycloneDetector
-            from ml.intensity.intensity_model import CycloneIntensityModel
-            from ml.rapid_intensification.ri_model import RapidIntensificationModel
-            from ml.explainability.gradcam import GradCAM
-            from ml.preprocessing.preprocessor import SatellitePreprocessor
-
-            self._torch = torch
-            self._gradcam_cls = GradCAM
-            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            import onnxruntime as ort
+            det_path = "models/onnx/detector.onnx"
+            int_path = "models/onnx/intensity.onnx"
+            ri_path = "models/onnx/ri.onnx"
+            opts = ort.SessionOptions()
+            opts.intra_op_num_threads = 2
+            opts.inter_op_num_threads = 1
+            self.detector = self._session(det_path, opts) if os.path.exists(det_path) else None
+            self.intensity_model = self._session(int_path, opts) if os.path.exists(int_path) else None
+            self.ri_model = self._session(ri_path, opts) if os.path.exists(ri_path) else None
             self.preprocessor = SatellitePreprocessor(image_size=(128, 128), sequence_length=6)
-
-            det_path = "models/detection/detector_best.pt"
-            if os.path.exists(det_path):
-                self.detector = CycloneDetector(in_channels=2, num_classes=2).to(self.device)
-                self.detector.load_state_dict(
-                    torch.load(det_path, map_location=self.device)["model_state_dict"])
-                self.detector.eval()
-                self.gradcam = GradCAM(self.detector, self.detector.layer4)
-
-            int_path = "models/intensity/intensity_best.pt"
-            if os.path.exists(int_path):
-                self.intensity_model = CycloneIntensityModel(in_channels=2, num_classes=7).to(self.device)
-                self.intensity_model.load_state_dict(
-                    torch.load(int_path, map_location=self.device)["model_state_dict"])
-                self.intensity_model.eval()
-
-            ri_path = "models/ri/ri_best.pt"
-            if os.path.exists(ri_path):
-                self.ri_model = RapidIntensificationModel(in_channels=2, spatial_features=48,
-                                                          convlstm_hidden=48, tabular_dim=4).to(self.device)
-                self.ri_model.load_state_dict(
-                    torch.load(ri_path, map_location=self.device)["model_state_dict"])
-                self.ri_model.eval()
-
             self.models_loaded = (self.detector is not None
                                   and self.intensity_model is not None
                                   and self.ri_model is not None)
         except Exception as e:  # noqa: BLE001 - degraded fallback is intentional
             print(f"[WARN] Vision chain load failed ({e})")
             self.models_loaded = False
+
+    @staticmethod
+    def _session(path: str, opts) -> object:
+        import onnxruntime as ort
+        return ort.InferenceSession(path, sess_options=opts,
+                                    providers=["CPUExecutionProvider"])
 
     def _as_grayscale(self, img: np.ndarray) -> np.ndarray:
         img = np.asarray(img)
@@ -240,32 +221,35 @@ class VisionChain:
             wv_norm = np.asarray(self.preprocessor.normalize_channel(wv_smooth, "wv"), dtype=np.float32)
             wv_source = "PROXY_FROM_IR"
 
-        torch = self._torch
         frame = np.stack([ir_norm, wv_norm], axis=0).astype(np.float32)          # [2,128,128]
         seq = np.repeat(frame[np.newaxis, ...], sequence_length, axis=0)          # [6,2,128,128]
-        seq_t = torch.from_numpy(seq).unsqueeze(0).float().to(self.device)        # [1,6,2,128,128]
+        seq_in = seq[np.newaxis, ...].astype(np.float32)                          # [1,6,2,128,128]
         # RI tabular context (normalised wind/pressure proxies, matching training scale)
         tabular = np.array([[0.60, 0.40, 0.60, 0.98]], dtype=np.float32)
 
-        with torch.no_grad():
-            det_logits = self.detector(seq_t[:, -1])
-            det_probs = torch.softmax(det_logits, dim=1).cpu().numpy()[0]
-            detected = bool(np.argmax(det_probs) == 1)
-            det_conf = float(det_probs[1] if detected else det_probs[0])
+        det_logits = self.detector.run(None, {"input": seq_in[:, -1]})[0][0]
+        det_probs = _softmax(det_logits)
+        detected = bool(np.argmax(det_probs) == 1)
+        det_conf = float(det_probs[1] if detected else det_probs[0])
 
-            int_logits = self.intensity_model(seq_t)
-            int_probs = torch.softmax(int_logits, dim=1).cpu().numpy()[0]
-            cat_idx = int(np.argmax(int_probs))
-            cat_name = list(CATEGORY_BANDS_KNOTS)[cat_idx]
-            int_conf = float(int_probs[cat_idx])
+        int_logits = self.intensity_model.run(None, {"input": seq_in})[0][0]
+        int_probs = _softmax(int_logits)
+        cat_idx = int(np.argmax(int_probs))
+        cat_name = list(CATEGORY_BANDS_KNOTS)[cat_idx]
+        int_conf = float(int_probs[cat_idx])
 
-            tab_t = torch.from_numpy(tabular).to(self.device)
-            ri_prob = float(torch.sigmoid(self.ri_model(seq_t, tab_t)).item())
+        ri_logit = self.ri_model.run(None, {"seq": seq_in, "tabular": tabular})[0]
+        ri_prob = float(1.0 / (1.0 + np.exp(-ri_logit.reshape(-1)[0])))
 
-        heatmap = self.gradcam.generate(seq_t[:, -1], class_idx=1)
-        _, blended = self._gradcam_cls.overlay_heatmap(ir_norm, heatmap)
-        _, buf = cv2.imencode(".jpg", cv2.cvtColor(blended, cv2.COLOR_RGB2BGR))
-        grad_overlay = "data:image/jpeg;base64," + base64.b64encode(buf).decode("utf-8")
+        gradcam = {
+            "heatmap_available": False,
+            "target_class": "Cyclonic Pattern (Eye / Rainbands)",
+            "overlay_image_base64": None,
+            "heatmap_image_base64": None,
+            "explanation": ("Grad-CAM heatmap requires the PyTorch runtime; the lightweight "
+                            "cloud build (ONNX Runtime) omits it. The detection/intensity/RI "
+                            "verdicts are unaffected."),
+        }
 
         plausibility = self._plausibility(ir_norm, rgb=ir_pix8)
 
@@ -303,12 +287,7 @@ class VisionChain:
                 "threshold_definition": ">= 30 knots sustained wind speed increase within 24 hours",
                 "source_mode": "MODEL_PREDICTION",
             },
-            "gradcam": {
-                "heatmap_available": True,
-                "target_class": "Cyclonic Pattern (Eye / Rainbands)",
-                "overlay_image_base64": grad_overlay,
-                "explanation": "Regions that most influenced the CNN prediction: intense central convective core and inner spiraling rainband organization.",
-            },
+            "gradcam": gradcam,
             "wv_source": wv_source,
             "input_frames": 1,
             "sequence_build": f"static-replicate-x{sequence_length}",
@@ -323,6 +302,11 @@ class VisionChain:
         }
 
 
+def _softmax(x: np.ndarray) -> np.ndarray:
+    e = np.exp(x - x.max(axis=-1, keepdims=True))
+    return e / e.sum(axis=-1, keepdims=True)
+
+
 _chain = None
 
 
@@ -335,9 +319,9 @@ def get_vision_chain() -> VisionChain:
 
 def models_ready() -> bool:
     """Non-loading readiness check: models exist on disk."""
-    return (os.path.exists("models/detection/detector_best.pt")
-            and os.path.exists("models/intensity/intensity_best.pt")
-            and os.path.exists("models/ri/ri_best.pt"))
+    return (os.path.exists("models/onnx/detector.onnx")
+            and os.path.exists("models/onnx/intensity.onnx")
+            and os.path.exists("models/onnx/ri.onnx"))
 
 
 def analyse_observation(obs: ObservationInput, ir_img: np.ndarray,

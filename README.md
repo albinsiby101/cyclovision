@@ -1,13 +1,4 @@
-﻿---
-title: CycloVision
-emoji: 🌪️
-colorFrom: indigo
-colorTo: sky
-sdk: gradio
-pinned: false
----
-
-# CycloVision — AI-Powered Cyclone Pattern Intelligence & Early Warning System
+﻿# CycloVision — AI-Powered Cyclone Pattern Intelligence & Early Warning System
 
 > **Smart India Hackathon 2026 | Problem Statement ID: SIH26070**  
 > Theme: Disaster Management | Category: Software | Team: La Squadra

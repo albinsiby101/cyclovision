@@ -1,6 +1,5 @@
 # CycloVision runtime dependencies (production / cloud deploy)
-# NOTE: torch/torchvision are pinned to the plain PyPI builds (CPU on Linux) —
-# the local environment uses the CUDA (+cu121) wheels; cloud hosts are CPU-only.
+# CNN inference uses ONNX Runtime (CPU) - torch is a dev/training-only dependency.
 
 fastapi==0.141.1
 uvicorn==0.53.0
@@ -17,5 +16,6 @@ pandas==3.0.5
 scikit-learn==1.9.1
 scipy==1.17.1
 
-torch==2.5.1
-torchvision==0.20.1
+# CNN inference runs through onnxruntime (CPU). The PyTorch models are exported
+# offline by backend/tools/export_onnx.py - torch is intentionally NOT installed.
+onnxruntime==1.30.0

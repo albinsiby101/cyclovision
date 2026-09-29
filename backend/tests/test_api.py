@@ -139,8 +139,11 @@ def test_analyse_satellite_image():
     assert data["wind_speed_knots"] > 0
     assert "intensity_cnn" in data
     assert "ri" in data
-    assert data["gradcam"]["heatmap_available"] is True
-    assert data["gradcam"]["overlay_image_base64"].startswith("data:image/jpeg")
+    assert "gradcam" in data and "heatmap_available" in data["gradcam"]
+    # ONNX Runtime cloud build does not ship PyTorch/Grad-CAM: heatmap must be
+    # cleanly flagged unavailable (prediction verdict itself is unchanged).
+    assert data["gradcam"]["heatmap_available"] is False
+    assert data["gradcam"]["overlay_image_base64"] is None
     assert data["wv_source"] == "UPLOADED"
     assert 0 <= data["rapid_intensification_risk"] <= 1
     assert len(data["outlook"]) == 3
