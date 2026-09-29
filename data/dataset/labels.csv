@@ -1,0 +1,267 @@
+file,label,lat,lon,iso_time,storm_id,wind_knots,category
+insat_25_25.png,cyclone,,,,,25.0,Depression
+insat_27_27.png,cyclone,,,,,27.0,Depression
+insat_28_28.png,cyclone,,,,,28.0,Deep Depression
+insat_30_30.png,cyclone,,,,,30.0,Deep Depression
+insat_30_30(1).png,cyclone,,,,,30.0,Deep Depression
+insat_31_31.png,cyclone,,,,,31.0,Deep Depression
+insat_32_32.png,cyclone,,,,,32.0,Deep Depression
+insat_32_32(1).png,cyclone,,,,,32.0,Deep Depression
+insat_33_33.png,cyclone,,,,,33.0,Deep Depression
+insat_33_33(1).png,cyclone,,,,,33.0,Deep Depression
+insat_33_33(2).png,cyclone,,,,,33.0,Deep Depression
+insat_34_34.png,cyclone,,,,,34.0,Cyclonic Storm
+insat_34_34(1).png,cyclone,,,,,34.0,Cyclonic Storm
+insat_35_35.png,cyclone,,,,,35.0,Cyclonic Storm
+insat_35_35(1).png,cyclone,,,,,35.0,Cyclonic Storm
+insat_35_35(2).png,cyclone,,,,,35.0,Cyclonic Storm
+insat_35_35(3).png,cyclone,,,,,35.0,Cyclonic Storm
+insat_36_36.png,cyclone,,,,,36.0,Cyclonic Storm
+insat_36_36(1).png,cyclone,,,,,36.0,Cyclonic Storm
+insat_36_36(2).png,cyclone,,,,,36.0,Cyclonic Storm
+insat_36_36(3).png,cyclone,,,,,36.0,Cyclonic Storm
+insat_37_37.png,cyclone,,,,,37.0,Cyclonic Storm
+insat_38_38.png,cyclone,,,,,38.0,Cyclonic Storm
+insat_39_39.png,cyclone,,,,,39.0,Cyclonic Storm
+insat_40_40.png,cyclone,,,,,40.0,Cyclonic Storm
+insat_40_40(1).png,cyclone,,,,,40.0,Cyclonic Storm
+insat_40_40(2).png,cyclone,,,,,40.0,Cyclonic Storm
+insat_40_40(3).png,cyclone,,,,,40.0,Cyclonic Storm
+insat_41_41.png,cyclone,,,,,41.0,Cyclonic Storm
+insat_42_42.png,cyclone,,,,,42.0,Cyclonic Storm
+insat_42_42(3).png,cyclone,,,,,42.0,Cyclonic Storm
+insat_43_43.png,cyclone,,,,,43.0,Cyclonic Storm
+insat_43_43(2).png,cyclone,,,,,43.0,Cyclonic Storm
+insat_44_44.png,cyclone,,,,,44.0,Cyclonic Storm
+insat_44_44(1).png,cyclone,,,,,44.0,Cyclonic Storm
+insat_44_44(2).png,cyclone,,,,,44.0,Cyclonic Storm
+insat_44_44(3).png,cyclone,,,,,44.0,Cyclonic Storm
+insat_45_45.png,cyclone,,,,,45.0,Cyclonic Storm
+insat_45_45(1).png,cyclone,,,,,45.0,Cyclonic Storm
+insat_45_45(2).png,cyclone,,,,,45.0,Cyclonic Storm
+insat_45_45(3).png,cyclone,,,,,45.0,Cyclonic Storm
+insat_45_45(4).png,cyclone,,,,,45.0,Cyclonic Storm
+insat_46_46.png,cyclone,,,,,46.0,Cyclonic Storm
+insat_46_46(1).png,cyclone,,,,,46.0,Cyclonic Storm
+insat_46_46(3).png,cyclone,,,,,46.0,Cyclonic Storm
+insat_47_47.png,cyclone,,,,,47.0,Cyclonic Storm
+insat_47_47(1).png,cyclone,,,,,47.0,Cyclonic Storm
+insat_47_47(2).png,cyclone,,,,,47.0,Cyclonic Storm
+insat_47_47(3).png,cyclone,,,,,47.0,Cyclonic Storm
+insat_47_47(4).png,cyclone,,,,,47.0,Cyclonic Storm
+insat_48_48.png,cyclone,,,,,48.0,Severe Cyclonic Storm
+insat_48_48(1).png,cyclone,,,,,48.0,Severe Cyclonic Storm
+insat_48_48(2).png,cyclone,,,,,48.0,Severe Cyclonic Storm
+insat_48_48(3).png,cyclone,,,,,48.0,Severe Cyclonic Storm
+insat_49_49.png,cyclone,,,,,49.0,Severe Cyclonic Storm
+insat_49_49(1).png,cyclone,,,,,49.0,Severe Cyclonic Storm
+insat_49_49(2).png,cyclone,,,,,49.0,Severe Cyclonic Storm
+insat_50_50.png,cyclone,,,,,50.0,Severe Cyclonic Storm
+insat_50_50(1).png,cyclone,,,,,50.0,Severe Cyclonic Storm
+insat_50_50(2).png,cyclone,,,,,50.0,Severe Cyclonic Storm
+insat_51_51.png,cyclone,,,,,51.0,Severe Cyclonic Storm
+insat_51_51(1).png,cyclone,,,,,51.0,Severe Cyclonic Storm
+insat_52_52.png,cyclone,,,,,52.0,Severe Cyclonic Storm
+insat_52_52(1).png,cyclone,,,,,52.0,Severe Cyclonic Storm
+insat_53_53.png,cyclone,,,,,53.0,Severe Cyclonic Storm
+insat_53_53(1).png,cyclone,,,,,53.0,Severe Cyclonic Storm
+insat_53_53(2).png,cyclone,,,,,53.0,Severe Cyclonic Storm
+insat_53_53(3).png,cyclone,,,,,53.0,Severe Cyclonic Storm
+insat_54_54.png,cyclone,,,,,54.0,Severe Cyclonic Storm
+insat_55_55.png,cyclone,,,,,55.0,Severe Cyclonic Storm
+insat_55_55(2).png,cyclone,,,,,55.0,Severe Cyclonic Storm
+insat_56_56.png,cyclone,,,,,56.0,Severe Cyclonic Storm
+insat_57_57.png,cyclone,,,,,57.0,Severe Cyclonic Storm
+insat_57_57(1).png,cyclone,,,,,57.0,Severe Cyclonic Storm
+insat_57_57(2).png,cyclone,,,,,57.0,Severe Cyclonic Storm
+insat_58_58.png,cyclone,,,,,58.0,Severe Cyclonic Storm
+insat_58_58(1).png,cyclone,,,,,58.0,Severe Cyclonic Storm
+insat_59_59.png,cyclone,,,,,59.0,Severe Cyclonic Storm
+insat_59_59(1).png,cyclone,,,,,59.0,Severe Cyclonic Storm
+insat_59_59(2).png,cyclone,,,,,59.0,Severe Cyclonic Storm
+insat_59_59(3).png,cyclone,,,,,59.0,Severe Cyclonic Storm
+insat_60_60.png,cyclone,,,,,60.0,Severe Cyclonic Storm
+insat_60_60(1).png,cyclone,,,,,60.0,Severe Cyclonic Storm
+insat_60_60(2).png,cyclone,,,,,60.0,Severe Cyclonic Storm
+insat_61_61.png,cyclone,,,,,61.0,Severe Cyclonic Storm
+insat_61_61(1).png,cyclone,,,,,61.0,Severe Cyclonic Storm
+insat_61_61(2).png,cyclone,,,,,61.0,Severe Cyclonic Storm
+insat_62_62.png,cyclone,,,,,62.0,Severe Cyclonic Storm
+insat_63_63.png,cyclone,,,,,63.0,Severe Cyclonic Storm
+insat_63_63(1).png,cyclone,,,,,63.0,Severe Cyclonic Storm
+insat_63_63(2).png,cyclone,,,,,63.0,Severe Cyclonic Storm
+insat_64_64.png,cyclone,,,,,64.0,Very Severe Cyclonic Storm
+insat_64_64(1).png,cyclone,,,,,64.0,Very Severe Cyclonic Storm
+insat_64_64(2).png,cyclone,,,,,64.0,Very Severe Cyclonic Storm
+insat_65_65.png,cyclone,,,,,65.0,Very Severe Cyclonic Storm
+insat_65_65(2).png,cyclone,,,,,65.0,Very Severe Cyclonic Storm
+insat_65_65(3).png,cyclone,,,,,65.0,Very Severe Cyclonic Storm
+insat_67_67.png,cyclone,,,,,67.0,Very Severe Cyclonic Storm
+insat_67_67(1).png,cyclone,,,,,67.0,Very Severe Cyclonic Storm
+insat_68_68.png,cyclone,,,,,68.0,Very Severe Cyclonic Storm
+insat_69_69.png,cyclone,,,,,69.0,Very Severe Cyclonic Storm
+insat_69_69(1).png,cyclone,,,,,69.0,Very Severe Cyclonic Storm
+insat_70_70.png,cyclone,,,,,70.0,Very Severe Cyclonic Storm
+insat_73_73.png,cyclone,,,,,73.0,Very Severe Cyclonic Storm
+insat_74_74.png,cyclone,,,,,74.0,Very Severe Cyclonic Storm
+insat_74_74(1).png,cyclone,,,,,74.0,Very Severe Cyclonic Storm
+insat_74_74(2).png,cyclone,,,,,74.0,Very Severe Cyclonic Storm
+insat_75_75.png,cyclone,,,,,75.0,Very Severe Cyclonic Storm
+insat_77_77.png,cyclone,,,,,77.0,Very Severe Cyclonic Storm
+insat_77_77(1).png,cyclone,,,,,77.0,Very Severe Cyclonic Storm
+insat_81_81.png,cyclone,,,,,81.0,Very Severe Cyclonic Storm
+insat_81_81(1).png,cyclone,,,,,81.0,Very Severe Cyclonic Storm
+insat_82_82.png,cyclone,,,,,82.0,Very Severe Cyclonic Storm
+insat_82_82(1).png,cyclone,,,,,82.0,Very Severe Cyclonic Storm
+insat_83_83(1).png,cyclone,,,,,83.0,Very Severe Cyclonic Storm
+insat_84_84.png,cyclone,,,,,84.0,Very Severe Cyclonic Storm
+insat_84_84(1).png,cyclone,,,,,84.0,Very Severe Cyclonic Storm
+insat_85_85.png,cyclone,,,,,85.0,Very Severe Cyclonic Storm
+insat_85_85(1).png,cyclone,,,,,85.0,Very Severe Cyclonic Storm
+insat_85_85(2).png,cyclone,,,,,85.0,Very Severe Cyclonic Storm
+insat_86_86.png,cyclone,,,,,86.0,Very Severe Cyclonic Storm
+insat_86_86(1).png,cyclone,,,,,86.0,Very Severe Cyclonic Storm
+insat_86_86(2).png,cyclone,,,,,86.0,Very Severe Cyclonic Storm
+insat_87_87.png,cyclone,,,,,87.0,Very Severe Cyclonic Storm
+insat_94_94.png,cyclone,,,,,94.0,Extremely Severe Cyclonic Storm
+insat_98_98.png,cyclone,,,,,98.0,Extremely Severe Cyclonic Storm
+insat_99_99.png,cyclone,,,,,99.0,Extremely Severe Cyclonic Storm
+insat_101_101.png,cyclone,,,,,101.0,Extremely Severe Cyclonic Storm
+insat_102_102.png,cyclone,,,,,102.0,Extremely Severe Cyclonic Storm
+insat_106_106.png,cyclone,,,,,106.0,Extremely Severe Cyclonic Storm
+insat_111_111.png,cyclone,,,,,111.0,Extremely Severe Cyclonic Storm
+insat_112_112.png,cyclone,,,,,112.0,Extremely Severe Cyclonic Storm
+insat_115_115.png,cyclone,,,,,115.0,Extremely Severe Cyclonic Storm
+insat_118_118.png,cyclone,,,,,118.0,Extremely Severe Cyclonic Storm
+insat_119_119.png,cyclone,,,,,119.0,Extremely Severe Cyclonic Storm
+insat_128_128.png,cyclone,,,,,128.0,Super Cyclonic Storm
+gibs_noc_000.png,nocylone,,,,,,
+gibs_noc_001.png,nocylone,,,,,,
+gibs_noc_002.png,nocylone,,,,,,
+gibs_noc_006.png,nocylone,,,,,,
+gibs_noc_007.png,nocylone,,,,,,
+gibs_noc_008.png,nocylone,,,,,,
+gibs_noc_009.png,nocylone,,,,,,
+gibs_noc_010.png,nocylone,,,,,,
+gibs_noc_011.png,nocylone,,,,,,
+gibs_noc_012.png,nocylone,,,,,,
+gibs_noc_013.png,nocylone,,,,,,
+gibs_noc_014.png,nocylone,,,,,,
+gibs_noc_015.png,nocylone,,,,,,
+gibs_noc_016.png,nocylone,,,,,,
+gibs_noc_018.png,nocylone,,,,,,
+gibs_noc_019.png,nocylone,,,,,,
+gibs_noc_020.png,nocylone,,,,,,
+gibs_noc_021.png,nocylone,,,,,,
+gibs_noc_022.png,nocylone,,,,,,
+gibs_noc_023.png,nocylone,,,,,,
+gibs_noc_024.png,nocylone,,,,,,
+gibs_noc_025.png,nocylone,,,,,,
+gibs_noc_026.png,nocylone,,,,,,
+gibs_noc_027.png,nocylone,,,,,,
+gibs_noc_029.png,nocylone,,,,,,
+gibs_noc_030.png,nocylone,,,,,,
+gibs_noc_031.png,nocylone,,,,,,
+gibs_noc_032.png,nocylone,,,,,,
+gibs_noc_033.png,nocylone,,,,,,
+gibs_noc_034.png,nocylone,,,,,,
+gibs_noc_036.png,nocylone,,,,,,
+gibs_noc_037.png,nocylone,,,,,,
+gibs_noc_038.png,nocylone,,,,,,
+gibs_noc_040.png,nocylone,,,,,,
+gibs_noc_042.png,nocylone,,,,,,
+gibs_noc_043.png,nocylone,,,,,,
+gibs_noc_045.png,nocylone,,,,,,
+gibs_noc_046.png,nocylone,,,,,,
+gibs_noc_047.png,nocylone,,,,,,
+gibs_noc_048.png,nocylone,,,,,,
+gibs_noc_049.png,nocylone,,,,,,
+gibs_noc_050.png,nocylone,,,,,,
+gibs_noc_051.png,nocylone,,,,,,
+gibs_noc_052.png,nocylone,,,,,,
+gibs_noc_054.png,nocylone,,,,,,
+gibs_noc_055.png,nocylone,,,,,,
+gibs_noc_056.png,nocylone,,,,,,
+gibs_noc_057.png,nocylone,,,,,,
+gibs_noc_058.png,nocylone,,,,,,
+gibs_noc_059.png,nocylone,,,,,,
+synth_neg_000.png,nocylone,,,,,,
+synth_neg_001.png,nocylone,,,,,,
+synth_neg_002.png,nocylone,,,,,,
+synth_neg_003.png,nocylone,,,,,,
+synth_neg_004.png,nocylone,,,,,,
+synth_neg_005.png,nocylone,,,,,,
+synth_neg_006.png,nocylone,,,,,,
+synth_neg_007.png,nocylone,,,,,,
+synth_neg_008.png,nocylone,,,,,,
+synth_neg_009.png,nocylone,,,,,,
+synth_neg_010.png,nocylone,,,,,,
+synth_neg_011.png,nocylone,,,,,,
+synth_neg_012.png,nocylone,,,,,,
+synth_neg_013.png,nocylone,,,,,,
+synth_neg_014.png,nocylone,,,,,,
+synth_neg_015.png,nocylone,,,,,,
+synth_neg_016.png,nocylone,,,,,,
+synth_neg_017.png,nocylone,,,,,,
+synth_neg_018.png,nocylone,,,,,,
+synth_neg_019.png,nocylone,,,,,,
+synth_neg_020.png,nocylone,,,,,,
+synth_neg_021.png,nocylone,,,,,,
+synth_neg_022.png,nocylone,,,,,,
+synth_neg_023.png,nocylone,,,,,,
+synth_neg_024.png,nocylone,,,,,,
+synth_neg_025.png,nocylone,,,,,,
+synth_neg_026.png,nocylone,,,,,,
+synth_neg_027.png,nocylone,,,,,,
+synth_neg_028.png,nocylone,,,,,,
+synth_neg_029.png,nocylone,,,,,,
+synth_neg_030.png,nocylone,,,,,,
+synth_neg_031.png,nocylone,,,,,,
+synth_neg_032.png,nocylone,,,,,,
+synth_neg_033.png,nocylone,,,,,,
+synth_neg_034.png,nocylone,,,,,,
+synth_neg_035.png,nocylone,,,,,,
+synth_neg_036.png,nocylone,,,,,,
+synth_neg_037.png,nocylone,,,,,,
+synth_neg_038.png,nocylone,,,,,,
+synth_neg_039.png,nocylone,,,,,,
+synth_neg_040.png,nocylone,,,,,,
+synth_neg_041.png,nocylone,,,,,,
+synth_neg_042.png,nocylone,,,,,,
+synth_neg_043.png,nocylone,,,,,,
+synth_neg_044.png,nocylone,,,,,,
+synth_neg_045.png,nocylone,,,,,,
+synth_neg_046.png,nocylone,,,,,,
+synth_neg_047.png,nocylone,,,,,,
+synth_neg_048.png,nocylone,,,,,,
+synth_neg_049.png,nocylone,,,,,,
+synth_neg_050.png,nocylone,,,,,,
+synth_neg_051.png,nocylone,,,,,,
+synth_neg_052.png,nocylone,,,,,,
+synth_neg_053.png,nocylone,,,,,,
+synth_neg_054.png,nocylone,,,,,,
+synth_neg_055.png,nocylone,,,,,,
+synth_neg_056.png,nocylone,,,,,,
+synth_neg_057.png,nocylone,,,,,,
+synth_neg_058.png,nocylone,,,,,,
+synth_neg_059.png,nocylone,,,,,,
+synth_neg_060.png,nocylone,,,,,,
+synth_neg_061.png,nocylone,,,,,,
+synth_neg_062.png,nocylone,,,,,,
+synth_neg_063.png,nocylone,,,,,,
+synth_neg_064.png,nocylone,,,,,,
+synth_neg_065.png,nocylone,,,,,,
+synth_neg_066.png,nocylone,,,,,,
+synth_neg_067.png,nocylone,,,,,,
+synth_neg_068.png,nocylone,,,,,,
+synth_neg_069.png,nocylone,,,,,,
+synth_neg_070.png,nocylone,,,,,,
+synth_neg_071.png,nocylone,,,,,,
+synth_neg_072.png,nocylone,,,,,,
+synth_neg_073.png,nocylone,,,,,,
+synth_neg_074.png,nocylone,,,,,,
+synth_neg_075.png,nocylone,,,,,,
+synth_neg_076.png,nocylone,,,,,,
+synth_neg_077.png,nocylone,,,,,,
+synth_neg_078.png,nocylone,,,,,,
+synth_neg_079.png,nocylone,,,,,,

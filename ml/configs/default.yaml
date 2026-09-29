@@ -1,0 +1,89 @@
+﻿project:
+  name: "CycloVision"
+  version: "1.0.0"
+  description: "AI-Powered Cyclone Pattern Intelligence & Early Warning System"
+  problem_statement_id: "SIH26070"
+  team: "La Squadra"
+  theme: "Disaster Management"
+
+system:
+  seed: 42
+  device: "auto" # auto, cuda, or cpu
+  num_workers: 2
+
+data:
+  raw_insat_dir: "data/raw/insat"
+  raw_ibtracs_file: "data/raw/ibtracs/IBTrACS.NI.list.v04r01.csv"
+  raw_era5_dir: "data/raw/era5"
+  processed_dir: "data/processed"
+  demo_dir: "data/demo"
+  image_size: [128, 128] # [H, W] standard spatial size
+  channels: ["IR1", "WV"] # Thermal Infrared (10.8um) + Water Vapour (6.8um)
+  in_channels: 2
+  sequence_length: 6 # 6 frames temporal sequence (cadence ~ 1 to 3 hours)
+  normalization:
+    ir:
+      min_k: 180.0
+      max_k: 310.0
+    wv:
+      min_k: 200.0
+      max_k: 270.0
+
+detection:
+  architecture: "cyclone_resnet18"
+  num_classes: 2
+  class_names: ["Non-Cyclonic", "Cyclonic"]
+  confidence_threshold: 0.50
+  batch_size: 16
+  learning_rate: 0.0003
+  epochs: 15
+  checkpoint_path: "models/detection/detector_best.pt"
+
+intensity:
+  architecture: "cnn_convlstm"
+  conv_features: 64
+  convlstm_hidden: 64
+  sequence_length: 6
+  num_classes: 7
+  # Standard IMD / WMO North Indian Ocean classification
+  class_names:
+    - "Depression"                    # 17-27 knots (31-49 km/h)
+    - "Deep Depression"               # 28-33 knots (50-61 km/h)
+    - "Cyclonic Storm"                # 34-47 knots (62-88 km/h)
+    - "Severe Cyclonic Storm"         # 48-63 knots (89-117 km/h)
+    - "Very Severe Cyclonic Storm"    # 64-89 knots (118-166 km/h)
+    - "Extremely Severe Cyclonic Storm" # 90-119 knots (167-221 km/h)
+    - "Super Cyclonic Storm"          # >= 120 knots (>= 222 km/h)
+  batch_size: 8
+  learning_rate: 0.0002
+  epochs: 20
+  checkpoint_path: "models/intensity/intensity_best.pt"
+
+rapid_intensification:
+  # Formal meteorological threshold: >= 30 knots sustained wind speed increase within 24 hours
+  wind_speed_increase_threshold_knots: 30.0
+  forecast_window_hours: 24
+  num_classes: 2
+  class_names: ["No RI Expected", "Rapid Intensification Likely"]
+  risk_levels:
+    low: [0.0, 0.35]
+    moderate: [0.35, 0.65]
+    high: [0.65, 1.0]
+  imbalance_handling:
+    use_focal_loss: true
+    focal_gamma: 2.0
+    pos_weight: 4.5 # ~ 7-10% rare event positive weighting
+  batch_size: 8
+  learning_rate: 0.0002
+  epochs: 25
+  checkpoint_path: "models/ri/ri_best.pt"
+
+explainability:
+  method: "gradcam"
+  target_layer: "layer4" # CNN feature extractor layer
+  colormap: "JET"
+  output_dir: "outputs/gradcam"
+
+alerts:
+  authoritative_agency: "India Meteorological Department (IMD) / NDMA"
+  disclaimer: "CycloVision is an AI decision-support prototype and must not replace official cyclone advisories issued by IMD or authorized disaster-management agencies."

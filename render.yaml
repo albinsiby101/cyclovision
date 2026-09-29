@@ -1,0 +1,10 @@
+# Render blueprint - one-click deploy of the full CycloVision web app.
+# Creates a public HTTPS URL (https://cyclovision.onrender.com by default).
+services:
+  - type: web
+    name: cyclovision
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    region: singapore
+    dockerfilePath: ./Dockerfile
