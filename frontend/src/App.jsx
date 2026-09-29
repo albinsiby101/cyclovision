@@ -31,7 +31,7 @@ import {
   LineChart,
   Line
 } from "recharts";
-import TrackMap from "./components/TrackMap";
+import TrackMap from "./Components/TrackMap";
 import { fetchHealth, fetchStorms, fetchAnalysis, forecastObservation, analyseSatellite, getFrameUrl } from "./api";
 import SatelliteExplorer from "./SatelliteExplorer";
 
