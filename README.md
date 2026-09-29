@@ -3,8 +3,7 @@ title: CycloVision
 emoji: 🌪️
 colorFrom: indigo
 colorTo: sky
-sdk: docker
-app_port: 7860
+sdk: gradio
 pinned: false
 ---
 
