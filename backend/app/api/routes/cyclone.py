@@ -76,8 +76,23 @@ def _imd_category(wind: float) -> str:
                        ("Extremely Severe Cyclonic Storm", 90), ("Super Cyclonic Storm", 120)], wind)
 
 
+_MODEL_PROBES = (
+    "models/cyclo_models.joblib",
+    "models/onnx/detector.onnx",
+    "models/onnx/intensity.onnx",
+    "models/onnx/ri.onnx",
+    "models/satellite_gate/metadata.json",
+)
+
+
 @router.get("/health", response_model=HealthResponse, tags=["system"])
 def health():
+    model_files = {"cwd": os.getcwd()}
+    for rel in _MODEL_PROBES:
+        try:
+            model_files[rel] = os.path.getsize(rel)
+        except OSError:
+            model_files[rel] = None
     return HealthResponse(
         status="ok",
         application="CycloVision",
@@ -85,6 +100,7 @@ def health():
         models_loaded=forecast_service.models_ready(),
         mode="operational",
         device="cpu",
+        model_files=model_files,
     )
 
 

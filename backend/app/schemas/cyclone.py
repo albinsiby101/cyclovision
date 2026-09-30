@@ -16,6 +16,7 @@ class HealthResponse(BaseModel):
     models_loaded: bool
     mode: str
     device: str
+    model_files: Optional[dict] = None
 
 
 class ObservationInput(BaseModel):
