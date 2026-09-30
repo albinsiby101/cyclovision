@@ -63,8 +63,14 @@ class VisionChain:
             int_path = "models/onnx/intensity.onnx"
             ri_path = "models/onnx/ri.onnx"
             opts = ort.SessionOptions()
-            opts.intra_op_num_threads = 2
+            # Memory-conscious settings for the 512 MB cloud tier: the CPU arena
+            # and the mem-pattern planner hold on to buffers that a handful of
+            # 128x128 inferences never need, and extra op threads multiply the
+            # per-thread arenas.
+            opts.intra_op_num_threads = 1
             opts.inter_op_num_threads = 1
+            opts.enable_cpu_mem_arena = False
+            opts.enable_mem_pattern = False
             self.detector = self._session(det_path, opts) if os.path.exists(det_path) else None
             self.intensity_model = self._session(int_path, opts) if os.path.exists(int_path) else None
             self.ri_model = self._session(ri_path, opts) if os.path.exists(ri_path) else None

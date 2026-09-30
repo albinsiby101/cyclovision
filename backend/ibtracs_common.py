@@ -79,17 +79,7 @@ def build_storm_cache(df: pd.DataFrame, names: list) -> dict:
     return cache
 
 
-CAT_BANDS = [("Depression", 17), ("Deep Depression", 28), ("Cyclonic Storm", 34),
-             ("Severe Cyclonic Storm", 48), ("Very Severe Cyclonic Storm", 64),
-             ("Extremely Severe Cyclonic Storm", 90), ("Super Cyclonic Storm", 120)]
-
-
-def imd_category(wind) -> str:
-    label = CAT_BANDS[0][0]
-    for name, lo in CAT_BANDS:
-        if wind >= lo:
-            label = name
-    return label
+from backend.app.core.cat_bands import CAT_BANDS, imd_category  # noqa: F401  (re-export)
 
 
 def project_root() -> str:

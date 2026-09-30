@@ -11,14 +11,17 @@ each model was trained on, and chains the three models into a forecast:
 import math
 import os
 import threading
+from datetime import datetime, timezone
 from types import SimpleNamespace
 from typing import Dict, List
 
 import joblib
 import numpy as np
-import pandas as pd
 
-from backend.ibtracs_common import CAT_BANDS as DEFAULT_CAT_BANDS
+# Imported from the pandas-free constants module on purpose: pulling
+# backend.ibtracs_common here would import pandas (~36 MB resident) into the
+# cloud process for the sake of a literal.
+from backend.app.core.cat_bands import CAT_BANDS as DEFAULT_CAT_BANDS
 
 _MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
                            "models", "cyclo_models.joblib")
@@ -54,6 +57,30 @@ def _pin_single_thread(obj):
                     pass
 
 
+def _strip_feature_names(obj):
+    """The forests were fitted on DataFrames, so sklearn expects named columns.
+    The API feeds dense float arrays (pandas-free), so drop the recorded names
+    to avoid a "X does not have valid feature names" warning on every call."""
+    seen = set()
+    stack = [obj]
+    while stack:
+        node = stack.pop()
+        if id(node) in seen:
+            continue
+        seen.add(id(node))
+        if hasattr(node, "feature_names_in_"):
+            try:
+                del node.feature_names_in_
+            except Exception:
+                pass
+        for attr in ("estimators_", "estimators"):
+            if hasattr(node, attr):
+                try:
+                    stack.extend(list(getattr(node, attr)))
+                except Exception:
+                    pass
+
+
 def _load():
     global _artifacts, _load_attempted
     if _load_attempted:
@@ -68,6 +95,7 @@ def _load():
         for key in ("intensity", "formation", "track"):
             if key in _artifacts:
                 _pin_single_thread(_artifacts[key])
+                _strip_feature_names(_artifacts[key])
         if "cat_bands" not in _artifacts:
             _artifacts["cat_bands"] = DEFAULT_CAT_BANDS
     return _artifacts
@@ -118,25 +146,33 @@ def _regress_multi(model, X):
     return np.column_stack(out) if len(out) > 1 else out[0]
 
 
-def _mk_row(obs) -> pd.DataFrame:
-    """Build the superset feature row; each model picks its own columns."""
-    wind = float(obs.wind_knots)
-    pres = float(obs.pressure_hpa)
-    return pd.DataFrame([{
+def _mk_row(obs) -> dict:
+    """Build the superset feature row; each model picks its own columns.
+
+    A plain dict (not a DataFrame) keeps pandas out of the runtime; the models
+    only ever see a dense float64 array via _row_array(), which reproduces the
+    exact column order/typing the training pipeline produced.
+    """
+    return {
         "LAT": float(obs.latitude), "LON": float(obs.longitude),
-        "WIND": wind, "PRES": pres,
+        "WIND": float(obs.wind_knots), "PRES": float(obs.pressure_hpa),
         "STORM_SPEED": float(obs.storm_speed_knots),
         "STORM_DIR": float(obs.storm_direction_deg),
         "MONTH": int(obs.month), "HOUR": int(obs.hour), "OBS_NUM": int(obs.obs_num),
         "WIND_CHANGE": 0.0, "PRES_CHANGE": 0.0, "LAT_CHANGE": 0.0, "LON_CHANGE": 0.0,
-    }])
+    }
+
+
+def _row_array(row: dict, cols) -> np.ndarray:
+    """Select the model's feature columns from the superset row -> (1, n) float64."""
+    return np.asarray([[float(row[c]) for c in cols]], dtype=np.float64)
 
 
 def category_posterior(art, row, feature_cols):
     """Empirical per-tree distribution across IMD categories (honest ensemble posterior)."""
     cats = art["cat_bands"]
     labels = [c[0] for c in cats]
-    X = row[feature_cols].to_numpy()
+    X = _row_array(row, feature_cols)
     vals = _raw_forest(art["intensity"], X)[0]
     counts = {lab: 0 for lab in labels}
     for w in vals:
@@ -151,7 +187,7 @@ def intensity_forecast(obs) -> Dict:
         raise RuntimeError("cyclo_models.joblib not found — run backend/train_ibtracs.py first")
     row = _mk_row(obs)
     cols = art["feature_cols_intensity"]
-    X = row[cols].to_numpy()
+    X = _row_array(row, cols)
     pred = float(_regress_multi(art["intensity"], X)[0])
     posterior = category_posterior(art, row, cols)
     top_cat, top_prob = max(posterior.items(), key=lambda kv: kv[1])
@@ -167,7 +203,7 @@ def formation_forecast(obs) -> Dict:
     art = _load()
     row = _mk_row(obs)
     cols = art["feature_cols_formation"]
-    probs = art["formation"].predict_proba(row[cols])[0]
+    probs = art["formation"].predict_proba(_row_array(row, cols))[0]
     prob = float(probs[1])
     verdict = "LIKELY_TO_INTENSIFY" if prob >= 0.5 else "UNLIKELY_TO_FORM"
     return {"probability_becomes_cyclone": round(prob, 4), "verdict": verdict}
@@ -177,7 +213,7 @@ def track_forecast(obs) -> Dict:
     art = _load()
     row = _mk_row(obs)
     cols = art["feature_cols_track"]
-    na, nb = _regress_multi(art["track"], row[cols].to_numpy())[0]
+    na, nb = _regress_multi(art["track"], _row_array(row, cols))[0]
     nlat, nlon = float(na), float(nb)
     dlat = nlat - float(obs.latitude)
     dlon = nlon - float(obs.longitude)
@@ -277,7 +313,7 @@ def full_forecast(obs, source_mode: str, storm_id=None, name=None) -> Dict:
         "outlook": [{k: v for k, v in pt.items() if not k.startswith("_")} for pt in outlook],
         "storm_id": storm_id,
         "storm_name": name,
-        "timestamp": pd.Timestamp.now("UTC").strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         "cyclone_detected": prob >= 0.5,
         "detection_confidence": prob,
         "intensity_category": category,

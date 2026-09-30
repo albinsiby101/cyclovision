@@ -56,3 +56,4 @@ outputs/logs/*.log
 models/detection/*.pt
 models/intensity/*.pt
 models/ri/*.pt
+models/*.bak
